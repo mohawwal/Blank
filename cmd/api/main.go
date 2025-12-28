@@ -33,12 +33,12 @@ func main() {
 	}
 
 	twilioService := services.NewTwilioService()
-	claudeService := services.NewClaudeService()
+	claudeService := services.NewAIService()
 
 	h := handlers.Handler{
-		DB:              db,
-		TwilioService:   twilioService,
-		ClaudeService:   claudeService,
+		DB:            db,
+		TwilioService: twilioService,
+		ClaudeService: claudeService,
 	}
 
 	app := Application{

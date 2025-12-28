@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -61,7 +61,8 @@ func (h *Handler) processWhatsAppMessage(from, userPhone, ProfileName, cleanBody
 		welcomeMsg, err := h.ClaudeService.ProcessUserMessage("Generate a welcome message", userName, true)
 		if err != nil {
 			log.Printf("API error for welcome message: %v", err)
-			welcomeMsg = fmt.Sprintf("Hello %s! Welcome to Blank AI Bot. How can we assist you today?", userName)
+			// Fallback message when Claude API fails
+			welcomeMsg = "Hello 😁" + userName + "! \n\nWelcome to *Blank AI Bot*!\n\nI can help you with:\n• Airtime & Data (MTN, Glo, Airtel, 9mobile)\n• Electricity bills (PHCN)\n• TV subscriptions (DStv, GOtv, Startimes)\n• Internet bills\n• Water bills...\n\n"
 		}
 
 		log.Printf("Sending welcome message to: %s", from)

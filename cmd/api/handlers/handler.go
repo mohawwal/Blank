@@ -9,5 +9,5 @@ import (
 type Handler struct {
 	DB              *gorm.DB
 	TwilioService   *services.TwilioService
-	ClaudeService   *services.ClaudeService
+	ClaudeService   *services.AIService
 }
