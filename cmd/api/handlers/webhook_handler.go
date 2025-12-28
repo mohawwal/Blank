@@ -27,8 +27,8 @@ func (h *Handler) WhatsAppWebhook(c echo.Context) error {
 	// Process message in background to avoid Twilio timeout
 	go h.processWhatsAppMessage(from, userPhone, ProfileName, cleanBody)
 
-	return c.String(http.StatusOK, "message received")
-	// return c.NoContent(http.StatusOK)
+	// return c.String(http.StatusOK, "message received")
+	return c.NoContent(http.StatusOK)
 }
 
 // processWhatsAppMessage handles the actual message processing asynchronously
