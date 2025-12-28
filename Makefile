@@ -47,3 +47,37 @@ fmt:
 tidy:
 	@echo "Tidying module dependencies..."
 	go mod tidy
+
+# Ngrok tunnel for webhooks (requires ngrok installed)
+.PHONY: ngrok
+ngrok:
+	@echo "Starting ngrok tunnel on port 2342..."
+	ngrok http 2342
+
+# Ngrok with custom port
+.PHONY: ngrok-port
+ngrok-port:
+	@echo "Starting ngrok tunnel on custom port..."
+	@read -p "Enter port number: " port; \
+	ngrok http $$port
+
+# Run app and ngrok in parallel (requires tmux or run in separate terminals)
+.PHONY: dev
+dev:
+	@echo "Starting development environment..."
+	@echo "Run 'make run' in one terminal and 'make ngrok' in another"
+	@echo "Or install tmux and use 'make dev-tmux'"
+
+# Development with tmux (requires tmux installed)
+.PHONY: dev-tmux
+dev-tmux:
+	@echo "Starting app and ngrok in tmux..."
+	tmux new-session -d -s whatsapp-bot 'make run'
+	tmux split-window -h 'make ngrok'
+	tmux attach-session -t whatsapp-bot
+
+# Stop tmux session
+.PHONY: stop-tmux
+stop-tmux:
+	@echo "Stopping tmux session..."
+	tmux kill-session -t whatsapp-bot || echo "No tmux session found"

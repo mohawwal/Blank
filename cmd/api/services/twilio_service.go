@@ -41,7 +41,7 @@ func (s *TwilioService) SendMessage(to string, body string) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("http request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -49,5 +49,10 @@ func (s *TwilioService) SendMessage(to string, body string) error {
 		return nil
 	}
 
-	return fmt.Errorf("failed to send message, status: %s", resp.Status)
+	// Read error response body for debugging
+	bodyBytes := make([]byte, 1024)
+	n, _ := resp.Body.Read(bodyBytes)
+	errorBody := string(bodyBytes[:n])
+
+	return fmt.Errorf("failed to send message, status: %s, body: %s", resp.Status, errorBody)
 }

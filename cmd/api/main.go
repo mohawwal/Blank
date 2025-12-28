@@ -33,16 +33,12 @@ func main() {
 	}
 
 	twilioService := services.NewTwilioService()
-	paystackService := services.NewPaystackService()
 	claudeService := services.NewClaudeService()
-	// vtpassService := services.NewVTPassService()
 
 	h := handlers.Handler{
 		DB:              db,
 		TwilioService:   twilioService,
-		PaystackService: paystackService,
 		ClaudeService:   claudeService,
-		// VTPassService:   vtpassService,
 	}
 
 	app := Application{

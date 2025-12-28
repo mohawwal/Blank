@@ -9,7 +9,5 @@ import (
 type Handler struct {
 	DB              *gorm.DB
 	TwilioService   *services.TwilioService
-	PaystackService *services.PaystackService
 	ClaudeService   *services.ClaudeService
-	// VTPassService   *services.VTPassService
 }

@@ -7,6 +7,6 @@ import (
 func (app *Application) routes(handler handlers.Handler) {
 	app.server.GET("/", handler.HealthCheck)
 	app.server.POST("/webhook/whatsapp", handler.WhatsAppWebhook)
-	app.server.POST("/webhook/paystack", handler.PaystackWebhook)
+	// app.server.POST("/webhook/paystack", handler.PaystackWebhook)
 	// app.server.GET("/purchase/confirm/:txn_id", handler.ConfirmPurchase)
 }

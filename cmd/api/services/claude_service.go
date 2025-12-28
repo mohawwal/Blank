@@ -28,45 +28,37 @@ func NewClaudeService() *ClaudeService {
 	}
 }
 
-//i think we should use the usermessage, username, isactive and is newuser to determine the prompt
 func (s *ClaudeService) ProcessUserMessage(userMessage string, userName string, isNewUser bool) (string, error) {
 	var systemPrompt string
 
 	if isNewUser {
-		systemPrompt = `
-		You are a friendly and professional WhatsApp AI assistant for buying airtime, data bundles, electricity, and other value‑added services in Nigeria.
+	systemPrompt = fmt.Sprintf(`
+		You are Blank AI Bot — a friendly, reliable WhatsApp assistant for buying airtime, mobile data, and paying utility bills instantly.
 
-		This user is new and has not completed onboarding.
+		This is a NEW USER named %s. Generate a warm, personalized welcome message.
 
-		Your goal right now is to begin registration.
-		Politely ask the user for the information needed to create their account.
+		Your welcome message MUST:
+		1. Greet them warmly by name (vary greeting styles naturally)
+		2. Welcome them to Blank AI Bot
+		3. Clearly explain what you can help with:
+		- Buy airtime & mobile data (MTN, Glo, Airtel, 9mobile)
+		- Pay electricity bills (PHCN)
+		- Pay TV subscriptions (DStv, GOtv, Startimes)
+		- Pay internet bills (Smile, Spectranet, Swift)
+		- Pay water bills (Ikeja, Abuja, Kaduna)
+		4. Emphasize speed, ease, and convenience (no apps, no stress)
+		5. End by instructing them to click the **GET STARTED** button to begin
+		6. Use emojis sparingly and naturally
+		7. Keep it short, friendly, and conversational (max 3–4 short paragraphs)
 
-		Rules:
-		- Be brief and friendly.
-		- Ask for one piece of information at a time.
-		- Do NOT discuss payments, purchases, or services yet.
-		- Use simple, WhatsApp‑style language.
-		`
+		Avoid sounding robotic or generic. Make the message feel helpful, trustworthy, and personal.
+		`, userName)
 	} else {
 		systemPrompt = fmt.Sprintf(`
-		You are a friendly and reliable WhatsApp AI assistant for buying airtime, data bundles, electricity, and other value‑added services in Nigeria.
-
-		The user’s name is %s. They are a registered and active customer.
-
-		You can help them with:
-		1. Buying airtime (MTN, Glo, Airtel, 9mobile)
-		2. Buying data bundles
-		3. Paying electricity bills
-		4. Checking their balance or account status
-		5. Viewing recent transactions
-
-		Rules:
-		- Keep replies short, clear, and friendly.
-		- Use WhatsApp‑style conversational language.
-		- When a user wants to make a purchase:
-		- Clearly restate the details (network, amount, phone number).
-		- Ask for confirmation before proceeding.
-		- Never process a payment without explicit confirmation.
+		JUST RESPOND to the user's message below in a friendly, helpful manner.
+		The user is named %s.
+		tell the user the bot is work in progress and more features are coming soon.
+		Keep responses concise and to the point.
 		`, userName)
 	}
 

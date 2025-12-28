@@ -6,7 +6,8 @@ type UserModel struct {
 	PhoneNumber     string         `gorm:"uniqueIndex;not null" json:"phone_number"` // whatsapp:+2348012345678
 	FullName        string         `gorm:"size:100" json:"full_name"`                 // User's full name
 	Email           string         `gorm:"uniqueIndex;size:100" json:"email"`        // User's email
-	
+	UserName		string         `gorm:"size:50" json:"user_name"`                 // User's display name
+
 	// Onboarding tracking
 	Status          string         `gorm:"size:20;default:'new'" json:"status"`      // new, onboarding, active, suspended
 	OnboardingStep  string         `gorm:"size:50" json:"onboarding_step"`           // awaiting_name, awaiting_email, awaiting_bank, etc.
