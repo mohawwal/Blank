@@ -3,6 +3,7 @@ package common
 import (
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -24,12 +25,34 @@ func ConnectDB() (*gorm.DB, error) {
 		},
 	)
 
+	// Add prefer_simple_protocol=true to DSN to avoid prepared statement caching issues
+	if dsn != "" && !strings.Contains(dsn, "prefer_simple_protocol") {
+		separator := "?"
+		if strings.Contains(dsn, "?") {
+			separator = "&"
+		}
+		dsn += separator + "prefer_simple_protocol=true"
+	}
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: newLogger,
+		Logger:                                   newLogger,
+		PrepareStmt:                              false, // Disable prepared statements for PgBouncer compatibility
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 
 	if err != nil {
 		return nil, err
 	}
+
+	// Configure connection pool
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetConnMaxLifetime(time.Hour)
+
 	return db, nil
 }

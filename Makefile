@@ -11,6 +11,12 @@ run:
 	@echo "Running the application..."
 	go run ./cmd/api
 
+# Run terminal chat mode
+.PHONY: chat
+chat:
+	@echo "Starting terminal chat mode..."
+	go run ./cmd/terminal
+
 # Build the application
 .PHONY: build
 build:
@@ -81,3 +87,17 @@ dev-tmux:
 stop-tmux:
 	@echo "Stopping tmux session..."
 	tmux kill-session -t whatsapp-bot || echo "No tmux session found"
+
+# Kill the running server on port 2342
+.PHONY: kill
+kill:
+	@echo "Stopping server on port 2342..."
+	@lsof -ti:2342 | xargs kill -9 2>/dev/null && echo "Server stopped successfully" || echo "No server running on port 2342"
+
+# Restart the server (kill + build + run in background)
+.PHONY: restart
+restart: kill build
+	@echo "Starting server in background..."
+	@./bin/$(BINARY_NAME) &
+	@sleep 1
+	@echo "Server restarted successfully on port 2342"
