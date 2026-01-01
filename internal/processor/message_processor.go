@@ -126,6 +126,13 @@ func (p *MessageProcessor) handleUnpaidUser(userPhone string, user models.UserMo
 		return p.MessagingService.SendMessage(userPhone, reminderMsg)
 	}
 
+	// Update user with new transaction reference
+	user.OnboardingTxnReference = paystackResponse.Data.Reference
+	user.OnboardingTxnStatus = "pending"
+	if err := p.DB.Save(&user).Error; err != nil {
+		log.Printf("ERROR updating transaction reference: %v", err)
+	}
+
 	// Send payment reminder
 	reminderMsg := "👋 Welcome back!\n\n*Please complete your wallet setup to start using the bot:*\n\n" + paystackResponse.Data.AuthorizationURL
 	return p.MessagingService.SendMessage(userPhone, reminderMsg)
