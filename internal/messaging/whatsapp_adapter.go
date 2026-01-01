@@ -9,16 +9,16 @@ import (
 	"strings"
 )
 
-// TwilioAdapter implements MessagingService for Twilio WhatsApp
-type TwilioAdapter struct {
+// WhatsAppAdapter implements MessagingService for WhatsApp (via Twilio)
+type WhatsAppAdapter struct {
 	AccountSID string
 	AuthToken  string
 	FromNumber string
 }
 
-// NewTwilioAdapter creates a new Twilio messaging adapter
-func NewTwilioAdapter() *TwilioAdapter {
-	return &TwilioAdapter{
+// NewWhatsAppAdapter creates a new WhatsApp messaging adapter
+func NewWhatsAppAdapter() *WhatsAppAdapter {
+	return &WhatsAppAdapter{
 		AccountSID: os.Getenv("TWILIO_ACCOUNT_SID"),
 		AuthToken:  os.Getenv("TWILIO_AUTH_TOKEN"),
 		FromNumber: os.Getenv("TWILIO_WHATSAPP_NUMBER"),
@@ -26,11 +26,11 @@ func NewTwilioAdapter() *TwilioAdapter {
 }
 
 // SendMessage sends a regular WhatsApp message via Twilio
-func (t *TwilioAdapter) SendMessage(to string, body string) error {
-	apiURL := fmt.Sprintf("https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json", t.AccountSID)
+func (w *WhatsAppAdapter) SendMessage(to string, body string) error {
+	apiURL := fmt.Sprintf("https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json", w.AccountSID)
 
 	data := url.Values{}
-	data.Set("From", t.FromNumber)
+	data.Set("From", w.FromNumber)
 	data.Set("To", to)
 	data.Set("Body", body)
 
@@ -39,7 +39,7 @@ func (t *TwilioAdapter) SendMessage(to string, body string) error {
 		return err
 	}
 
-	req.SetBasicAuth(t.AccountSID, t.AuthToken)
+	req.SetBasicAuth(w.AccountSID, w.AuthToken)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
@@ -61,12 +61,12 @@ func (t *TwilioAdapter) SendMessage(to string, body string) error {
 	return fmt.Errorf("failed to send message, status: %s, body: %s", resp.Status, errorBody)
 }
 
-// SendTemplateMessage sends a Twilio Content Template message
-func (t *TwilioAdapter) SendTemplateMessage(to string, templateData TemplateData) error {
-	apiURL := fmt.Sprintf("https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json", t.AccountSID)
+// SendTemplateMessage sends a WhatsApp template message via Twilio
+func (w *WhatsAppAdapter) SendTemplateMessage(to string, templateData TemplateData) error {
+	apiURL := fmt.Sprintf("https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json", w.AccountSID)
 
 	data := url.Values{}
-	data.Set("From", t.FromNumber)
+	data.Set("From", w.FromNumber)
 	data.Set("To", to)
 	data.Set("ContentSid", templateData.TemplateName)
 
@@ -84,7 +84,7 @@ func (t *TwilioAdapter) SendTemplateMessage(to string, templateData TemplateData
 		return fmt.Errorf("failed to create request: %w", err)
 	}
 
-	req.SetBasicAuth(t.AccountSID, t.AuthToken)
+	req.SetBasicAuth(w.AccountSID, w.AuthToken)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
@@ -100,7 +100,7 @@ func (t *TwilioAdapter) SendTemplateMessage(to string, templateData TemplateData
 	responseBody := string(bodyBytes[:n])
 
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		fmt.Printf("Twilio template response (SUCCESS): %s\n", responseBody)
+		fmt.Printf("WhatsApp template response (SUCCESS): %s\n", responseBody)
 		return nil
 	}
 

@@ -37,11 +37,11 @@ func main() {
 	claudeService := services.NewAIService()
 	paystackService := services.NewPaystackService()
 
-	// Initialize Twilio messaging adapter
-	twilioAdapter := messaging.NewTwilioAdapter()
+	// Initialize WhatsApp messaging adapter
+	whatsappAdapter := messaging.NewWhatsAppAdapter()
 
-	// Initialize message processor with Twilio adapter
-	messageProcessor := processor.NewMessageProcessor(db, claudeService, paystackService, twilioAdapter)
+	// Initialize message processor with WhatsApp adapter
+	messageProcessor := processor.NewMessageProcessor(db, claudeService, paystackService, whatsappAdapter)
 
 	h := handlers.Handler{
 		DB:               db,
