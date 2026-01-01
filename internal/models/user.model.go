@@ -20,7 +20,11 @@ type UserModel struct {
 	CardBank              string   `gorm:"size:100" json:"card_bank"`                // Issuing bank
 	CardExpMonth          string   `gorm:"size:2" json:"card_exp_month"`             // Card expiry month
 	CardExpYear           string   `gorm:"size:4" json:"card_exp_year"`              // Card expiry year
-	
+
+	// Onboarding Transaction Tracking
+	OnboardingTxnReference  string `gorm:"size:100" json:"onboarding_txn_reference"` // Paystack reference for onboarding payment
+	OnboardingTxnStatus     string `gorm:"size:20" json:"onboarding_txn_status"`     // pending, success, failed, abandoned
+
 	// Current conversation state
 	PendingTransactionID  *uint    `json:"pending_transaction_id"`                   // Transaction waiting for confirmation
 	ConversationContext   string   `gorm:"type:text" json:"conversation_context"`    // Store conversation history (JSON)

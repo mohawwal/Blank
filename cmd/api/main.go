@@ -6,6 +6,8 @@ import (
 	"whatsapp-bot-app/cmd/api/middlewares"
 	"whatsapp-bot-app/cmd/api/services"
 	"whatsapp-bot-app/common"
+	"whatsapp-bot-app/internal/messaging"
+	"whatsapp-bot-app/internal/processor"
 
 	"os"
 
@@ -32,13 +34,20 @@ func main() {
 		fmt.Println("Failed to connect to database")
 	}
 
-	twilioService := services.NewTwilioService()
 	claudeService := services.NewAIService()
+	paystackService := services.NewPaystackService()
+
+	// Initialize Twilio messaging adapter
+	twilioAdapter := messaging.NewTwilioAdapter()
+
+	// Initialize message processor with Twilio adapter
+	messageProcessor := processor.NewMessageProcessor(db, claudeService, paystackService, twilioAdapter)
 
 	h := handlers.Handler{
-		DB:            db,
-		TwilioService: twilioService,
-		ClaudeService: claudeService,
+		DB:               db,
+		ClaudeService:    claudeService,
+		PaystackService:  paystackService,
+		MessageProcessor: messageProcessor,
 	}
 
 	app := Application{
